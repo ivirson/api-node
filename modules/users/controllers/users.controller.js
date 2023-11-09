@@ -102,8 +102,15 @@ class UsersController {
         return res.status(404).json();
       }
 
-      if (!(await bcrypt.compare(user.password, userExist.password))) {
+      if (
+        user.password &&
+        !(await bcrypt.compare(user.password, userExist.password))
+      ) {
         user.password = await bcrypt.hash(user.password, 10);
+      }
+
+      if (!user.password) {
+        user.password = userExist.password;
       }
 
       usersRepository.update(id, user);

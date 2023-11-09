@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require("uuid");
 class UsersRepository {
   async findAll() {
     await database.sync();
-    const users = await User.findAll({
+    let users = await User.findAll({
       include: [
         {
           model: Address,
@@ -53,7 +53,7 @@ class UsersRepository {
 
     const { address, ...user } = userP;
 
-    const updatedUser = await User.update(userP, {
+    await User.update(user, {
       where: {
         id,
       },
@@ -61,7 +61,7 @@ class UsersRepository {
 
     await Address.update(address, {
       where: {
-        userId: userP.id,
+        userId: user.id,
       },
     });
   }
